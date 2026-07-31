@@ -1,7 +1,6 @@
 import { PronunciationGuide } from "./VoiceComponents/ProunounciationGuide";
 import { RecordingPanel } from "./VoiceComponents/RecordingPanel";
 import ClinicalGuidance from "./VoiceComponents/ClinicalGuidance";
-import OximeterParserTest from "./OximeterComponents/OximeterParserTest";
 import OximeterParent from "./OximeterComponents/OximeterParent";
 import AssessmentStepper from "./AssesmentStepper";
 
