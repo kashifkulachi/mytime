@@ -84,7 +84,7 @@ export default function Sidebar() {
         lg:translate-x-0`}
       >
         {/* Header */}
-        <div className="mb-10 flex items-center gap-3 justify-between px-6">
+        <div className="mb-10 flex items-center align-middle gap-3 justify-between px-6">
           <div>
             <h1 className="font-bold text-4xl text-primary dark:text-primary-fixed">
               MyTime

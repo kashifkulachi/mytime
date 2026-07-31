@@ -210,7 +210,7 @@ export default function AssessmentStepper() {
   }
 
   return (
-    <section className="mx-auto w-full max-w-6xl">
+    <section className="mx-auto w-full">
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         <header className="border-b border-slate-200 px-5 py-6 sm:px-8">
           <div className="mb-6">
