@@ -37,9 +37,15 @@ export interface IFIFormulaInput {
   /*
    * Voice metrics returned by the Praat API
    */
-  amplitude: number;
-  frequency: number;
-  intensity: number;
+  /*
+   * Processed voice metrics returned by the Praat API.
+   *
+   * These must represent summary measurements from the complete
+   * voice recording—not individual audio-frame measurements.
+   */
+  rmsAmplitude: number;
+  meanFrequency: number;
+  meanIntensity: number;
 
   /*
    * Oximeter measurements

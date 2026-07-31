@@ -84,13 +84,13 @@ export default function Sidebar() {
         lg:translate-x-0`}
       >
         {/* Header */}
-        <div className="mb-10 flex items-center justify-between px-6">
+        <div className="mb-10 flex items-center gap-3 justify-between px-6">
           <div>
-            <h1 className="font-headline text-headline-md font-bold text-primary dark:text-primary-fixed">
-              Digital
+            <h1 className="font-bold text-4xl text-primary dark:text-primary-fixed">
+              MyTime
             </h1>
-            <p className="font-label text-label-md text-on-surface-variant">
-              Wellness
+            <p className="font-mono text-2xl mt-1 bg-secondary-container p-1 text-on-primary">
+              Monitoring
             </p>
           </div>
 

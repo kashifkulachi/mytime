@@ -276,8 +276,8 @@ export function calculateIFI(input: IFIFormulaInput): IFICalculationResult {
    * LN((K × Amplitude) / (Frequency × Intensity × Sex Factor))
    */
   const pvLogArgument =
-    (IFI_K_CONSTANT * input.amplitude) /
-    (input.frequency * input.intensity * sexFactor);
+    (IFI_K_CONSTANT * input.rmsAmplitude) /
+    (input.meanFrequency * input.meanIntensity * sexFactor);
 
   if (!Number.isFinite(pvLogArgument) || pvLogArgument <= 0) {
     throw new Error("PV logarithm input must be a positive finite number.");

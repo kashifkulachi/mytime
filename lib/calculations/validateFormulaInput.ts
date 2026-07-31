@@ -66,9 +66,22 @@ export function validateFormulaInput(input: IFIFormulaInput): void {
   /*
    * Voice metric validation
    */
-  validateRequiredNumber(input.frequency, "Voice frequency");
-  validateRequiredNumber(input.intensity, "Voice intensity");
-  validateRequiredNumber(input.amplitude, "Voice amplitude");
+  validateRequiredNumber(input.rmsAmplitude, "Voice RMS amplitude");
+
+  validateRequiredNumber(input.meanFrequency, "Voice mean frequency");
+
+  validateRequiredNumber(input.meanIntensity, "Voice mean intensity");
+  if (input.rmsAmplitude <= 0) {
+    throw new Error("Voice RMS amplitude must be greater than zero.");
+  }
+
+  if (input.meanFrequency <= 0) {
+    throw new Error("Voice mean frequency must be greater than zero.");
+  }
+
+  if (input.meanIntensity <= 0) {
+    throw new Error("Voice mean intensity must be greater than zero.");
+  }
 
   /*
    * Oximeter validation

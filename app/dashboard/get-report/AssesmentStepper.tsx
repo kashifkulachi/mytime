@@ -175,9 +175,9 @@ export default function AssessmentStepper() {
          * calculate the result, save the assessment, and return
          * an AssessmentResult.
          */
-        const result = await submitAssessmentAction(assessment);
+        // const result = await submitAssessmentAction(assessment);
 
-        setResult(result);
+        // setResult(result);
 
         resetAssessment();
         clearStoredAssessmentStep();
@@ -355,7 +355,7 @@ export default function AssessmentStepper() {
               ) : (
                 <button
                   type="button"
-                  onClick={handleSubmitAssessment}
+                  // onClick={handleSubmitAssessment}
                   disabled={!isEntireAssessmentValid || isSubmitting}
                   className="inline-flex min-h-11 items-center justify-center gap-2 rounded-[10px] bg-emerald-600 px-5 text-sm font-semibold text-white transition cursor-pointer hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-300"
                 >

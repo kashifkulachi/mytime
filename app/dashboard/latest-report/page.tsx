@@ -145,6 +145,7 @@ export default function Page({ patientName, onBack, onPrint }: ReportProps) {
   if (!report) {
     return null;
   }
+
   // const status = getIfiStatus(report?.IFI?.ifi);
   const breakdownItems = Object.entries(report?.IFI?.breakdown ?? {});
 

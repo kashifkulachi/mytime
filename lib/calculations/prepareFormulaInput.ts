@@ -41,9 +41,10 @@ export function prepareFormulaInput(assessment: Assessment): IFIFormulaInput {
     /*
      * Praat voice measurements
      */
-    frequency: voice.metrics.frequency,
-    intensity: voice.metrics.intensity,
-    amplitude: voice.metrics.amplitude,
+
+    rmsAmplitude: voice.metrics.amplitude,
+    meanFrequency: voice.metrics.frequency,
+    meanIntensity: voice.metrics.intensity,
 
     /*
      * Oximeter measurements

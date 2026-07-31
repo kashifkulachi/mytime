@@ -14,9 +14,9 @@ const testInput: IFIFormulaInput = {
   spo2: 98,
   heartRate: 78,
 
-  amplitude: 12.489613279076472,
-  frequency: 230,
-  intensity: 68,
+  rmsAmplitude: 12.489613279076472,
+  meanFrequency: 230,
+  meanIntensity: 68,
 };
 
 validateFormulaInput(testInput);
@@ -24,3 +24,24 @@ validateFormulaInput(testInput);
 const testResult = calculateIFI(testInput);
 
 console.log("IFI test result:", testResult);
+
+const testInput3: IFIFormulaInput = {
+  evaluationDate: "2026-07-10",
+  dateOfBirth: "1962-06-20",
+  age: 64.1,
+  sex: "female",
+  heightCm: 160,
+  weightKg: 74,
+  bmi: 28.91,
+  spo2: 95,
+  heartRate: 84,
+  rmsAmplitude: 107.84,
+  meanFrequency: 195,
+  meanIntensity: 71,
+};
+
+validateFormulaInput(testInput3);
+
+const testResult_3 = calculateIFI(testInput3);
+
+console.log("IFI test result 3:", testResult_3);
