@@ -45,8 +45,8 @@ const STEPS: StepDefinition[] = [
   },
   {
     id: "patient",
-    title: "Patient Information",
-    description: "Enter the required patient information.",
+    title: "Bio Metrics",
+    description: "Enter the required Bio Metrics information.",
   },
 ];
 
