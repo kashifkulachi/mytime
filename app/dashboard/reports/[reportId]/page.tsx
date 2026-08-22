@@ -1733,7 +1733,7 @@ export default function ReportPage() {
           </p>
 
           <h1 className="mt-2 text-[28px] font-bold leading-tight tracking-[-0.025em] text-[#062d52] sm:text-[34px] lg:text-[40px]">
-            MyTime Evaluation Report
+            MyTime Monitoring Report
           </h1>
 
           <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-slate-600 sm:text-[15px]">
@@ -1900,7 +1900,7 @@ export default function ReportPage() {
             subtitle="Integrated Functional Index"
           >
             <span className="text-[38px] font-bold leading-none tracking-[-0.04em] text-[#062d52]">
-              {report.results.IFI.ifi.toFixed(2)}
+              {report.results.IFI.ifi}
             </span>
           </MetricCard>
 
