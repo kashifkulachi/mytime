@@ -1,5 +1,5 @@
 import type { Assessment } from "@/types/assessments";
-import type { IFIFormulaInput } from "@/types/assessment-calculation";
+import type { IFIFormulaInput } from "@/types/calculations/ifi-calculation";
 
 /**
  * Converts the nested Assessment Context data into one flat object
@@ -28,6 +28,7 @@ export function prepareFormulaInput(assessment: Assessment): IFIFormulaInput {
 
   return {
     evaluationDate: new Date().toISOString().slice(0, 10),
+    // evaluationDate: "2026-07-10", // TODO: Replace with actual evaluation date
     /*
      * Patient information
      */

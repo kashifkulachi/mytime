@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
+import "@/app/globals.css";
+import "@/app/medical-report.css";
 import { AssessmentProvider } from "@/context/AssesmentContext";
 import Sidebar from "@/components/ui/Sidebar";
 import { Toaster } from "sonner";
@@ -28,8 +29,7 @@ export default function RootLayout({
         <AssessmentProvider>
           <RecordingStatusProvider>
             <section className="flex">
-              <Sidebar />
-              <div className="flex-1 bg-surface lg:pl-72">{children}</div>
+              <div className="flex-1 bg-surface">{children}</div>
             </section>
           </RecordingStatusProvider>
         </AssessmentProvider>

@@ -1,15 +1,7 @@
 "use client";
 
 import { useMemo, useState, useSyncExternalStore, useTransition } from "react";
-import {
-  Check,
-  ChevronLeft,
-  ChevronRight,
-  LoaderCircle,
-  Send,
-} from "lucide-react";
-
-import { submitAssessmentAction } from "@/actions/assessment.action";
+import { Check, ChevronLeft, ChevronRight } from "lucide-react";
 
 import Voice from "./VoiceComponents/Voice";
 import PatientInfo from "./PatientInfoComponents/PatientInfo";
@@ -23,6 +15,10 @@ import {
   subscribeToAssessmentStep,
 } from "@/lib/assessment/assessmentStepStorage";
 // import "@/temporarily/test_check_IFI";
+// import "@/temporarily/test_check_BiologicalAge";
+// import "@/temporarily/test_check_Inflamation_Index";
+// import "@/temporarily/test_check_peptide_dose";
+// import "@/temporarily/test_check_Hbot";
 
 type StepId = "voice" | "patient" | "oximeter";
 
@@ -342,7 +338,7 @@ export default function AssessmentStepper() {
                 </p>
               )}
 
-              {!isLastStep ? (
+              {!isLastStep && (
                 <button
                   type="button"
                   onClick={handleNextStep}
@@ -352,28 +348,6 @@ export default function AssessmentStepper() {
                   Next step
                   <ChevronRight className="h-4 w-4" aria-hidden="true" />
                 </button>
-              ) : (
-                <button
-                  type="button"
-                  // onClick={handleSubmitAssessment}
-                  disabled={!isEntireAssessmentValid || isSubmitting}
-                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-[10px] bg-emerald-600 px-5 text-sm font-semibold text-white transition cursor-pointer hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-300"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <LoaderCircle
-                        className="h-4 w-4 animate-spin"
-                        aria-hidden="true"
-                      />
-                      Submitting...
-                    </>
-                  ) : (
-                    <>
-                      Submit assessment
-                      <Send className="h-4 w-4" aria-hidden="true" />
-                    </>
-                  )}
-                </button>
               )}
             </div>
           </div>
@@ -382,3 +356,25 @@ export default function AssessmentStepper() {
     </section>
   );
 }
+
+// <button
+//   type="button"
+//   // onClick={handleSubmitAssessment}
+//   disabled={!isEntireAssessmentValid || isSubmitting}
+//   className="inline-flex min-h-11 items-center justify-center gap-2 rounded-[10px] bg-emerald-600 px-5 text-sm font-semibold text-white transition cursor-pointer hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+// >
+//   {isSubmitting ? (
+//     <>
+//       <LoaderCircle
+//         className="h-4 w-4 animate-spin"
+//         aria-hidden="true"
+//       />
+//       Submitting...
+//     </>
+//   ) : (
+//     <>
+//       Submit assessment
+//       <Send className="h-4 w-4" aria-hidden="true" />
+//     </>
+//   )}
+// </button>

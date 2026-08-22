@@ -507,6 +507,12 @@ import * as z from "zod";
 import type { AssessmentResult } from "@/types/assessments";
 import type { OximeterData, OximeterMeasurement } from "@/types/oximeter";
 import type { VoiceMetrics, VoiceProcessingResult } from "@/types/voice";
+import {
+  biologicalAgeCalculationResultSchema,
+  hbotCalculationResultSchema,
+  ifiCalculationResultSchema,
+  peptideDoseCalculationResultSchema,
+} from "./report.schema";
 
 /*
  * =======================================================
@@ -686,6 +692,18 @@ const patientInfoFormBaseSchema = z.object({
   heightCm: heightCmSchema,
 
   weightKg: weightKgSchema,
+
+  patientName: z
+    .string({
+      error: (issue) =>
+        issue.input === undefined
+          ? "patient name is required."
+          : "patient name must be valid text.",
+    })
+    .trim()
+    .min(1, {
+      error: "patient name is required.",
+    }),
 });
 
 /**
@@ -947,47 +965,55 @@ void oximeterMeasurementTypeCheck;
  * =======================================================
  */
 
-export const assessmentResultSchema = z.object({
-  healthScore: z
-    .number({
-      error: (issue) =>
-        issue.input === undefined
-          ? "Health score is required."
-          : "Health score must be a valid number.",
-    })
-    .min(0, {
-      error: "Health score cannot be below 0.",
-    })
-    .max(100, {
-      error: "Health score cannot exceed 100.",
-    }),
+// export const assessmentResultSchema = z.object({
+//   healthScore: z
+//     .number({
+//       error: (issue) =>
+//         issue.input === undefined
+//           ? "Health score is required."
+//           : "Health score must be a valid number.",
+//     })
+//     .min(0, {
+//       error: "Health score cannot be below 0.",
+//     })
+//     .max(100, {
+//       error: "Health score cannot exceed 100.",
+//     }),
 
-  riskLevel: z
-    .string({
-      error: (issue) =>
-        issue.input === undefined
-          ? "Risk level is required."
-          : "Risk level must be valid text.",
-    })
-    .trim()
-    .min(1, {
-      error: "Risk level is required.",
-    }),
+//   riskLevel: z
+//     .string({
+//       error: (issue) =>
+//         issue.input === undefined
+//           ? "Risk level is required."
+//           : "Risk level must be valid text.",
+//     })
+//     .trim()
+//     .min(1, {
+//       error: "Risk level is required.",
+//     }),
 
-  recommendations: z.array(
-    z
-      .string({
-        error: "Each recommendation must be valid text.",
-      })
-      .trim()
-      .min(1, {
-        error: "Recommendations cannot be empty.",
-      }),
-  ),
+//   recommendations: z.array(
+//     z
+//       .string({
+//         error: "Each recommendation must be valid text.",
+//       })
+//       .trim()
+//       .min(1, {
+//         error: "Recommendations cannot be empty.",
+//       }),
+//   ),
+// });
+
+export const AssessmentResultSchema = z.object({
+  IFI: ifiCalculationResultSchema,
+  BiologicalAge: biologicalAgeCalculationResultSchema,
+  PeptideDose: peptideDoseCalculationResultSchema,
+  HBOTSessions: hbotCalculationResultSchema,
 });
 
+export type AssessmentResults = z.infer<typeof AssessmentResultSchema>;
 const assessmentResultTypeCheck =
-  assessmentResultSchema satisfies z.ZodType<AssessmentResult>;
+  AssessmentResultSchema satisfies z.ZodType<AssessmentResult>;
 
 void assessmentResultTypeCheck;
 
@@ -1004,7 +1030,7 @@ export const assessmentSchema = z.object({
   voice: voiceMetricsSchema.nullable(),
   patient: patientInfoSchema.nullable(),
   oximeter: oximeterDataSchema.nullable(),
-  result: assessmentResultSchema.nullable(),
+  result: AssessmentResultSchema.nullable(),
 });
 
 export type Assessment = z.infer<typeof assessmentSchema>;

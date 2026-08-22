@@ -3,7 +3,7 @@ import { CharacterGrid } from "./CharacterGrid";
 export function PronunciationGuide() {
   return (
     <>
-      <div className=" bg-surface-container-low rounded-xl border border-outline-variant p-3 flex flex-col items-center justify-center shadow-sm min-h-100  md:w-3xs w-full">
+      <div className=" bg-surface-container-low rounded-xl border border-outline-variant p-3 flex flex-col items-center justify-center shadow-sm min-h-100">
         <div className="text-center mb-md">
           <span className="text-[17px] mb-1.5 inline-block font-label-sm text-on-surface-variant uppercase tracking-wider">
             Pronunciation Guide

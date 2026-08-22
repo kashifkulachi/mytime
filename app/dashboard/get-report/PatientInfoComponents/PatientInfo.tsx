@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -15,7 +15,10 @@ import {
   Weight,
 } from "lucide-react";
 
-import type { PatientInfo as PatientInfoType } from "@/types/assessments";
+import type {
+  AssessmentResult,
+  PatientInfo as PatientInfoType,
+} from "@/types/assessments";
 
 import {
   patientInfoFormSchema,
@@ -40,12 +43,35 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAssessment } from "@/hooks/useAssessment";
-import { prepareFormulaInput } from "@/lib/calculations/prepareFormulaInput";
-import { validateFormulaInput } from "@/lib/calculations/validateFormulaInput";
-import { calculateIFI } from "@/lib/calculations/calculateIFI";
+import { prepareFormulaInput } from "@/lib/calculations/IFI/prepareFormulaInput";
+import { validateFormulaInput } from "@/lib/calculations/IFI/validateFormulaInput";
+import { calculateIFI } from "@/lib/calculations/IFI/calculateIFI";
 import { useRouter } from "next/navigation";
+import { BiologicalAgeFormulaInput } from "@/types/calculations/biological-age-calculation";
+import {
+  calculateBiologicalAge,
+  prepareBiologicalAgeInput,
+  validateBiologicalAgeInput,
+} from "@/lib/calculations/Biological-age";
+import {
+  calculateInflammationIndex,
+  prepareInflammationIndexInput,
+  validateInflammationIndexInput,
+} from "@/lib/calculations/Inflammation-Index";
+import {
+  calculatePeptideDose,
+  validatePeptideDoseInput,
+} from "@/lib/calculations/Pepdie-dose";
+import { preparePeptideDoseInput } from "@/lib/calculations/Pepdie-dose/preparePeptideDoseInput";
+import {
+  calculateHBOT,
+  prepareHBOTInput,
+  validateHBOTInput,
+} from "@/lib/calculations/Hbot";
+// import { calculateAllPeptideDoses } from "@/lib/calculations/Pepdie-dose";
 
 const EMPTY_FORM_VALUES: PatientInfoFormValues = {
+  patientName: "",
   dateOfBirth: "",
   age: 0,
   sex: "male",
@@ -175,6 +201,7 @@ function getPatientFormValues(
   }
 
   return {
+    patientName: patient.patientName,
     dateOfBirth: patient.dateOfBirth,
     age: patient.age,
     sex: patient.sex,
@@ -185,6 +212,7 @@ function getPatientFormValues(
 
 export default function PatientInfo() {
   const { assessment, updatePatient, setResult } = useAssessment();
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const router = useRouter();
 
   const form = useForm<PatientInfoFormValues>({
@@ -251,6 +279,7 @@ export default function PatientInfo() {
   async function handleSavePatient(
     values: PatientInfoFormValues,
   ): Promise<void> {
+    setIsSubmitting(true);
     const age = calculateAge(values.dateOfBirth);
 
     if (age === null) {
@@ -285,6 +314,7 @@ export default function PatientInfo() {
      * relying on a possibly delayed form-state update.
      */
     const patientData: PatientInfoType = {
+      patientName: values.patientName,
       dateOfBirth: values.dateOfBirth,
       age,
       sex: values.sex,
@@ -293,27 +323,129 @@ export default function PatientInfo() {
       bmi,
     };
 
-    await updatePatient(patientData);
+    updatePatient(patientData);
 
     const updatedAssessment = {
       ...assessment,
       patient: patientData,
     };
 
-    const formulaInput = prepareFormulaInput(updatedAssessment);
+    // ifi
 
-    validateFormulaInput(formulaInput);
+    const ififormulaInput = prepareFormulaInput(updatedAssessment);
 
-    const calculatedIFI_Real_Value = calculateIFI(formulaInput);
+    validateFormulaInput(ififormulaInput);
 
-    setResult({
-      IFI: calculatedIFI_Real_Value,
+    const ifiResult = calculateIFI(ififormulaInput);
+
+    // Biological
+
+    const biologicalAgeInput = prepareBiologicalAgeInput({
+      assessment: updatedAssessment,
+      ifiResult: ifiResult,
     });
 
-    router.push("/dashboard/latest-report");
+    validateBiologicalAgeInput(biologicalAgeInput);
 
-    console.log("Calculated IFI Values Completed: ", calculatedIFI_Real_Value);
-    toast.success("Patient information saved.");
+    const biologicalAgeResult = calculateBiologicalAge(biologicalAgeInput);
+
+    // Inflammation Index
+
+    // const inflammationInput = prepareInflammationIndexInput({
+    //   assessment: updatedAssessment,
+    //   ifiResult,
+    // });
+
+    // validateInflammationIndexInput(inflammationInput);
+
+    // const inflammationIndexResult =
+    //   calculateInflammationIndex(inflammationInput);
+
+    const peptideDosageInput = preparePeptideDoseInput({
+      ifiResult: ifiResult,
+      patient: patientData,
+    });
+
+    validatePeptideDoseInput(peptideDosageInput);
+
+    const peptideDoseResult = calculatePeptideDose(peptideDosageInput);
+
+    const hbotInput = prepareHBOTInput(ifiResult);
+
+    validateHBOTInput(hbotInput);
+
+    const HBOTCalculatedSessions = calculateHBOT(hbotInput);
+
+    const assessmentResult: AssessmentResult = {
+      IFI: ifiResult,
+      BiologicalAge: biologicalAgeResult,
+      PeptideDose: peptideDoseResult,
+      HBOTSessions: HBOTCalculatedSessions,
+    };
+
+    setResult(assessmentResult);
+
+    try {
+      const response = await fetch("/api/reports", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          patient: {
+            name: patientData.patientName,
+            dateOfBirth: patientData.dateOfBirth,
+            evaluationDate: biologicalAgeResult.evaluationDate,
+            gender: patientData.sex,
+          },
+
+          results: {
+            IFI: ifiResult,
+            BiologicalAge: biologicalAgeResult,
+            PeptideDose: peptideDoseResult,
+            HBOTSessions: HBOTCalculatedSessions,
+          },
+        }),
+      });
+
+      const data: unknown = await response.json();
+
+      if (!response.ok) {
+        console.error("Failed to create report:", data);
+
+        throw new Error("Failed to create report.");
+      }
+
+      if (
+        typeof data !== "object" ||
+        data === null ||
+        !("report" in data) ||
+        typeof data.report !== "object" ||
+        data.report === null ||
+        !("id" in data.report) ||
+        typeof data.report.id !== "string"
+      ) {
+        throw new Error(
+          "Report was created, but the server returned an invalid report ID.",
+        );
+      }
+
+      const reportId = data.report.id;
+
+      router.push(`/dashboard/reports/${reportId}`);
+    } catch (error) {
+      console.error("Report creation failed:", error);
+      toast.error("Report creation failed");
+      return;
+    } finally {
+      setIsSubmitting(false);
+    }
+
+    // console.log("Peptide Dose: ", peptideDoseResult);
+
+    // router.push("/dashboard/latest-report");
+
+    toast.success("Submitted redirecting...");
   }
 
   return (
@@ -334,6 +466,36 @@ export default function PatientInfo() {
           noValidate
         >
           <FieldGroup className="grid gap-7 md:grid-cols-2">
+            <Controller
+              name="patientName"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel
+                    htmlFor={field.name}
+                    className="flex items-center gap-2 text-sm font-semibold text-slate-900"
+                  >
+                    Patient Name
+                  </FieldLabel>
+
+                  <Input
+                    {...field}
+                    id={field.name}
+                    type="text"
+                    placeholder="John"
+                    aria-invalid={fieldState.invalid}
+                    className="h-12   bg-white border border-outline-variant rounded-[5px]"
+                  />
+
+                  <FieldDescription>patient&apos;s name.</FieldDescription>
+
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
             <Controller
               name="dateOfBirth"
               control={form.control}
@@ -605,21 +767,21 @@ export default function PatientInfo() {
           <div className="mt-8 flex flex-col-reverse gap-3 border-t border-slate-200 pt-6 sm:flex-row sm:items-center sm:justify-between">
             <Button
               type="submit"
-              disabled={form.formState.isSubmitting}
+              disabled={form.formState.isSubmitting || isSubmitting}
               className="min-h-13 md:w-1/5 max-w-1/2 cursor-pointer rounded-[10px] flex gap-2 bg-secondary px-6 text-white hover:bg-secondary-container disabled:cursor-not-allowed"
             >
-              {form.formState.isSubmitting ? (
+              {form.formState.isSubmitting || isSubmitting ? (
                 <>
                   <LoaderCircle
                     className="size-4 animate-spin"
                     aria-hidden="true"
                   />
-                  Saving Bio Metrics...
+                  Submitting Bio Metrics...
                 </>
               ) : (
                 <>
                   <SaveAll className="size-4" aria-hidden="true" />
-                  Save
+                  Submit
                 </>
               )}
             </Button>

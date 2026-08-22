@@ -119,11 +119,10 @@ export default function VoiceRecorder({
   };
 
   return (
-    <Button
+    <button
       type="button"
-      size="lg"
-      variant={isRecording ? "destructive" : "default"}
-      className={`w-full py-md cursor-pointer bg-primary text-on-primary rounded-lg font-label-md flex items-center justify-center gap-2 hover:opacity-90 transition-opacity h-12 ${isRecording ? "text-error bg-error-container" : ""}`}
+      // variant={isRecording ? "destructive" : "default"}
+      className={`w-52  py-md cursor-pointer bg-primary text-on-primary rounded-lg font-label-md flex items-center justify-center gap-2 hover:opacity-90 transition-opacity h-12 ${isRecording ? "text-error bg-error-container" : ""}`}
       onClick={handleClick}
       disabled={
         isRequestingPermission ||
@@ -143,6 +142,6 @@ export default function VoiceRecorder({
           Start Recording
         </>
       )}
-    </Button>
+    </button>
   );
 }

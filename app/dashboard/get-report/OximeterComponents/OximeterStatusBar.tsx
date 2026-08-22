@@ -140,7 +140,7 @@ export default function OximeterStatusBar({
             </button>
           )}
 
-        {isDeviceConnected && hasSavedDevice && (
+        {(isDeviceConnected || hasSavedDevice) && (
           <button
             className="flex items-center gap-sm px-2 cursor-pointer py-2 bg-amber-600 text-primary rounded-lg font-label-md hover:bg-surface-dim hover:text-primary disabled:opacity-50 border-amber-500 border transition-colors"
             disabled={

@@ -15,9 +15,7 @@ export default function PraatMetrics() {
           <span className="text-[18px] font-semibold text-primary">
             {assessment.voice?.metrics.amplitude.toFixed(2)}
           </span>
-          <span className="text-body-sm text-on-surface-variant font-semibold">
-            dB
-          </span>
+          <span className="text-body-sm text-on-surface-variant ">dB</span>
         </div>
       </div>
       <div className="bg-surface-container-lowest border border-outline-variant rounded-lg p-[17px] flex flex-col items-center justify-center shadow-sm">
@@ -28,9 +26,7 @@ export default function PraatMetrics() {
           <span className="text-[18px] font-semibold text-primary">
             {assessment.voice?.metrics.frequency.toFixed(2)}
           </span>
-          <span className="text-body-sm text-on-surface-variant font-semibold">
-            Hz
-          </span>
+          <span className="text-body-sm text-on-surface-variant">Hz</span>
         </div>
       </div>
       <div className="bg-surface-container-lowest border border-outline-variant rounded-lg p-[17px] flex flex-col items-center justify-center shadow-sm">
@@ -41,7 +37,7 @@ export default function PraatMetrics() {
           <span className="text-[18px] font-semibold text-primary">
             {assessment.voice?.metrics.intensity.toFixed(2)}
           </span>
-          <span className="text-body-sm text-on-surface-variant">W/m²</span>
+          <span className="text-body-sm text-on-surface-variant">db</span>
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import type { IFIFormulaInput } from "@/types/assessment-calculation";
+import type { IFIFormulaInput } from "@/types/calculations/ifi-calculation";
 
 /**
  * Checks whether a value is a valid, finite number.

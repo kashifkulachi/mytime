@@ -1,0 +1,90 @@
+@page {
+  size: 310mm 305mm;
+
+  margin: auto 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.medical-report-document {
+  background: #e5e7eb;
+}
+
+.medical-report-page {
+  min-height: 305mm;
+  padding: 35px 0;
+  break-after: page;
+  box-sizing: border-box;
+  page-break-after: always;
+}
+
+.medical-report-page:last-child {
+  break-after: auto;
+  page-break-after: auto;
+}
+
+@media print {
+  html,
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .medical-report-page {
+    width: 310mm;
+    height: 230mm;
+
+    margin: 0 auto;
+    padding: 0;
+
+    box-sizing: border-box;
+
+    break-after: page;
+    page-break-after: always;
+
+    overflow: hidden;
+  }
+
+  .medical-report-page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+}
+
+@media screen {
+  .medical-report-page {
+    margin-bottom: 5px;
+    box-shadow:
+      0 10px 15px -3px rgb(0 0 0 / 0.1),
+      0 4px 6px -4px rgb(0 0 0 / 0.1);
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    background: white;
+  }
+
+  .medical-report-document {
+    background: white;
+  }
+
+  .screen-only {
+    display: none !important;
+  }
+
+  * {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
