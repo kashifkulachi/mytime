@@ -1,9 +1,9 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 function ReportComponent() {
   const router = useRouter();
-
+  redirect("/login");
   function handleClick() {
     router.push("/dashboard/get-report");
   }
