@@ -122,7 +122,7 @@ export default function VoiceRecorder({
     <button
       type="button"
       // variant={isRecording ? "destructive" : "default"}
-      className={`w-52  py-md cursor-pointer bg-primary text-on-primary rounded-lg font-label-md flex items-center justify-center gap-2 hover:opacity-90 transition-opacity h-12 ${isRecording ? "text-error bg-error-container" : ""}`}
+      className={` flex-1 p-2 text-[15px] py-md cursor-pointer bg-primary text-on-primary rounded-lg font-label-md flex items-center justify-center gap-2 hover:opacity-90 transition-opacity h-12 ${isRecording ? "text-error bg-error-container" : ""}`}
       onClick={handleClick}
       disabled={
         isRequestingPermission ||

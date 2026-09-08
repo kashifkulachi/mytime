@@ -9,6 +9,7 @@ import {
   Stethoscope,
   Wind,
 } from "lucide-react";
+import Image from "next/image";
 
 export interface HBOTProtocol {
   id: "high-pressure" | "medium-pressure" | "low-pressure" | string;
@@ -38,7 +39,7 @@ function toneFor(id: string) {
   return TONES[id] ?? TONES["medium-pressure"];
 }
 function formatSessions(value: number) {
-  return Number.isFinite(value) ? value.toFixed(1) : "—";
+  return Number.isFinite(value) ? Math.round(value) : "—";
 }
 function typeName(id: string) {
   return id === "high-pressure"
@@ -47,6 +48,7 @@ function typeName(id: string) {
       ? "LOW-PRESSURE HBOT"
       : "MEDIUM-PRESSURE HBOT";
 }
+
 function chamberCopy(id: string) {
   return id === "low-pressure"
     ? "Soft Chamber (Hood/Shroud)"
@@ -73,7 +75,7 @@ export default function HBOTSessionReport({
         aria-label="Hyperbaric oxygen therapy recommendation"
         className={`mx-auto mt-3  w-[1100px] min-w-[1100px] overflow-hidden bg-white px-2 py-2 font-sans text-[#091b6c]  ${className}`}
       >
-        <div className="flex items-center text-center justify-center gap-2 mb-4">
+        {/* <div className="flex items-center text-center justify-center gap-2 mb-4">
           <span className="flex h-[70px] w-[70px] items-center justify-center rounded-full border-[3px] border-[#0a297c] text-[28px] font-serif font-black text-[#a86500]">
             EL
           </span>
@@ -86,11 +88,20 @@ export default function HBOTSessionReport({
             </p>
             <p className="text-[11px] tracking-[.5em]">LLC</p>
           </div>
-        </div>
-        <header className="grid grid-cols-[135px_1fr_280px] items-start justify-between gap-5 ">
-          <div />
+        </div> */}
+        <header className="grid grid-cols-[270px_1fr_280px] items-start justify-between gap-5 ">
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <Image
+              src="/Logo.jpg"
+              width={270}
+              height={100}
+              quality={100}
+              loading="eager"
+              alt="MYTime Logo"
+            />
+          </div>
           <div className="text-center ">
-            <h1 className="text-[32px] font-black uppercase leading-none tracking-[-.035em]">
+            <h1 className="text-[25px] font-black uppercase leading-none tracking-[-.035em]">
               Hyperbaric Oxygen Therapy (HBOT) Recommendation
             </h1>
             <p className="mt-1 text-[17px] font-bold italic leading-none">
@@ -99,10 +110,8 @@ export default function HBOTSessionReport({
             </p>
             <div className="mt-3 rounded-[9px] border border-[#8cb7ff] px-8 py-1.5 text-[13px] font-semibold leading-snug">
               HBOT enhances oxygen delivery, reduces inflammation, supports
-              tissue repair
-              <br />
-              and optimizes cellular function according to the individual
-              functional status.
+              tissue repair and optimizes cellular function according to the
+              individual functional status.
             </div>
           </div>
           <CorrelationCard />
@@ -151,7 +160,7 @@ function CorrelationCard() {
 }
 function TypesRail() {
   return (
-    <aside className="mt-[-63px] overflow-hidden rounded-[9px] border border-[#78aa7d]">
+    <aside className=" overflow-hidden rounded-[9px] border border-[#78aa7d]">
       <p className="py-3 text-center text-[19px] font-black leading-none text-[#135423]">
         TYPES
         <br />
@@ -226,7 +235,7 @@ function ProtocolCard({
   const { protocol } = recommendation;
   const tone = toneFor(protocol.id);
   return (
-    <article className="overflow-hidden mt-[-63px] rounded-[9px] border border-[#9aace4]">
+    <article className="overflow-hidden  rounded-[9px] border border-[#9aace4]">
       <p
         className="py-1 text-center text-[15px] font-black leading-none text-white"
         style={{ backgroundColor: tone.dark }}
@@ -238,7 +247,9 @@ function ProtocolCard({
         <br />
         Single Occupant
       </p>
-      <Chamber tone={tone.primary} high={protocol.id === "high-pressure"} />
+      {/* <Chamber tone={tone.primary} high={protocol.id === "high-pressure"} /> */}
+      <Chamber tone={tone.primary} high={protocol.id} />
+      {/* <Chamber tone={tone.primary} high="high-pressure" /> */}
       <div className="mx-1 mb-1 grid grid-cols-3 overflow-hidden rounded-[8px] border border-[#a3b6e9] text-center">
         <Metric icon={Activity} value={protocol.pressureAta} label="ATA" />
         <Metric
@@ -255,10 +266,26 @@ function ProtocolCard({
     </article>
   );
 }
-function Chamber({ tone, high }: { tone: string; high: boolean }) {
+function Chamber({ tone, high }: { tone: string; high: string }) {
   return (
-    <div className="relative mx-auto my-2 h-[150px] w-[250px]">
-      <div
+    <div className="relative  mx-auto my-2 h-[150px] w-[250px]">
+      <Image
+        src={
+          high == "low-pressure"
+            ? "/low-pressure-hyperbaric.jpg"
+            : high == "medium-pressure"
+              ? "/medium-pressure-hyperbaric.jpg"
+              : high == "high-pressure"
+                ? "/high-pressure-hyperbaric.jpg"
+                : ""
+        }
+        width={157}
+        height={10}
+        alt={`${high} Hyperbaric`}
+        className="ml-7 mt-[-10px]"
+        loading="eager"
+      />
+      {/* <div
         className={`absolute bottom-5 left-4 h-[84px] w-[195px] rounded-[45px] border-[5px] border-[#9da8b2] bg-[linear-gradient(110deg,#c6d0d6,#fff_24%,#d5dce1_52%,#fff_76%,#aeb9c1)] shadow-[inset_12px_0_14px_rgba(80,95,107,.2),0_7px_8px_rgba(22,31,46,.2)] ${high ? "" : "rounded-l-[70px]"}`}
       >
         <span className="absolute left-3 top-4 h-12 w-12 rounded-full border-4 border-[#616d77] bg-[radial-gradient(circle_at_35%_30%,#fff,#9ca8b0_65%)]" />
@@ -272,7 +299,7 @@ function Chamber({ tone, high }: { tone: string; high: boolean }) {
           className="absolute bottom-2 left-5 h-2 w-7 rounded"
           style={{ backgroundColor: tone }}
         />
-      </div>
+      </div> */}
       <div className="absolute bottom-1 left-11 h-3 w-[175px] rounded-[50%] bg-[#263746]/20 blur-sm" />
     </div>
   );
@@ -498,7 +525,7 @@ function Benefits() {
     ],
   ] as const;
   return (
-    <div className="mt-2 grid grid-cols-[120px_1fr_1fr_1fr_1fr_1fr] rounded-[9px] border border-[#a0b2e5] py-2">
+    <div className="my-2 grid grid-cols-[120px_1fr_1fr_1fr_1fr_1fr] rounded-[9px] border border-[#a0b2e5] py-2">
       <p className="border-r border-[#a0b2e5] text-center text-[15px] font-black leading-none">
         HBOT
         <br />

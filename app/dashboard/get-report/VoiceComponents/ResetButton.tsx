@@ -10,7 +10,7 @@ function ActionsButtons({ reset }: ActionProps) {
 
   return (
     <button
-      className="py-md border p-3 gap-2 border-outline-variant text-on-surface-variant rounded-lg font-label-md flex cursor-pointer items-center justify-center gap-sm hover:bg-surface-container-low transition-colors disabled:opacity-50"
+      className="py-md w-[100px] border p-3 gap-2 border-outline-variant text-on-surface-variant rounded-lg font-label-md flex cursor-pointer items-center justify-center gap-sm hover:bg-surface-container-low transition-colors disabled:opacity-50"
       onClick={reset}
       disabled={status == "processing" || status == "recording"}
     >

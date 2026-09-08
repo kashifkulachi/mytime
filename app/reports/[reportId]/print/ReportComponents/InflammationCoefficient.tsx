@@ -1,5 +1,6 @@
 import { ReportPage } from "@/components/medical-reports/ReportPage";
 import { CircleHelp, Flame, PersonStanding } from "lucide-react";
+import Image from "next/image";
 import type { ReactNode } from "react";
 
 const RULER_VALUES = Array.from({ length: 101 }, (_, value) => value);
@@ -47,21 +48,17 @@ export default function InflammationCoefficient({
     <ReportPage>
       <section
         aria-label="Inflammation coefficient report"
-        className={`mx-auto w-[1100px]  min-w-[1100px] overflow-hidden bg-white px-7 mt-5 pt-8 pb-0 font-sans text-[#071b74]   ${className}`}
+        className={`mx-auto w-[1100px]   min-w-[1100px] overflow-hidden bg-white px-7 mt-5 pt-8 pb-0 font-sans text-[#071b74]   ${className}`}
       >
-        <div className="flex items-center text-center justify-center gap-2 mb-4">
-          <span className="flex h-[70px] w-[70px] items-center justify-center rounded-full border-[3px] border-[#0a297c] text-[28px] font-serif font-black text-[#a86500]">
-            EL
-          </span>
-          <div>
-            <p className="text-[42px] font-serif leading-[.8] text-[#09216d]">
-              Elidan<span className="text-[#bd7105]">Lord</span>
-            </p>
-            <p className="mt-2 border-y border-[#bd7105] px-10 text-[28px] tracking-[.22em] leading-none">
-              MyTime
-            </p>
-            <p className="text-[11px] tracking-[.5em]">LLC</p>
-          </div>
+        <div className="flex justify-center items-center">
+          <Image
+            src="/Logo.jpg"
+            width={270}
+            height={100}
+            quality={100}
+            loading="eager"
+            alt="MYTime Logo"
+          />
         </div>
         <div className="grid grid-cols-[1.3fr_.93fr] items-start gap-6">
           <div className="pt-1 text-center">

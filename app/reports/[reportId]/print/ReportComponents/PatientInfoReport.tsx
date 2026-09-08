@@ -1,4 +1,5 @@
 import { CalendarDays, Mars, UserRound, Venus } from "lucide-react";
+import Image from "next/image";
 
 export interface AgingCoefficientPatientInfoProps {
   patientName: string;
@@ -29,19 +30,16 @@ export default function PatientInfoReport({
   return (
     <div className="text-center mt-13">
       <div className="flex items-center justify-center gap-2 mb-3">
-        <span className="flex h-[70px] w-[70px] items-center justify-center rounded-full border-[3px] border-[#0a297c] text-[28px] font-serif font-black text-[#a86500]">
-          EL
-        </span>
-        <div>
-          <p className="text-[42px] font-serif leading-[.8] text-[#09216d]">
-            Elidan<span className="text-[#bd7105]">Lord</span>
-          </p>
-          <p className="mt-2 border-y border-[#bd7105] px-10 text-[28px] tracking-[.22em] leading-none">
-            MyTime
-          </p>
-          <p className="text-[11px] tracking-[.5em]">LLC</p>
-        </div>
+        <Image
+          src="/Logo.jpg"
+          width={270}
+          height={100}
+          quality={100}
+          loading="eager"
+          alt="MYTime Logo"
+        />
       </div>
+
       <div
         aria-label="Patient information"
         className={`mx-auto flex w-[1000px] min-w-[1000px] items-stretch overflow-hidden rounded-[9px] border border-[#3248b0] bg-white font-sans text-[#071d68] ${className}`}

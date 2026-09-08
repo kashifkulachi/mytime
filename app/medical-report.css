@@ -1,5 +1,5 @@
 @page {
-  size: 310mm 305mm;
+  size: 310mm 318mm;
 
   margin: auto 0;
   box-sizing: border-box;
@@ -20,7 +20,7 @@ body {
 }
 
 .medical-report-page {
-  min-height: 305mm;
+  min-height: 318mm;
   padding: 35px 0;
   break-after: page;
   box-sizing: border-box;

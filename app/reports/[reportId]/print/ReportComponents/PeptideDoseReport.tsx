@@ -484,6 +484,7 @@ import {
   Syringe,
   UserRound,
 } from "lucide-react";
+import Image from "next/image";
 
 export interface PeptideDoseTreatment {
   id: string;
@@ -562,7 +563,7 @@ export default function PeptideDose({
         aria-label="Five FDA-approved peptide proof-of-concept report"
         className={`mx-auto w-[1100px] min-w-[1100px] overflow-hidden  bg-white px-[4mm] py-[3mm] font-sans text-[#071d74] mt-3 ${className}`}
       >
-        <header className="relative flex h-[52mm] items-start justify-between pt-[1mm]">
+        <header className="relative flex h-[57mm] items-start justify-between pt-[1mm]">
           <div className="w-[43mm] rounded-[8px] border border-[#5270d3] py-[2mm] text-center">
             <p className="text-[17px] font-black leading-none">IFI RANGE</p>
             <div className="mx-[5mm] mt-[2mm] rounded-[4px] bg-[linear-gradient(90deg,#c27500,#f0ad21,#bf7100)] py-[1mm] text-[35px] font-black leading-none text-white">
@@ -573,19 +574,15 @@ export default function PeptideDose({
             </p>
           </div>
           <div className="absolute left-1/2 top-0 w-[155mm] -translate-x-1/2 text-center">
-            <div className="flex items-center justify-center gap-2">
-              <span className="flex h-[70px] w-[70px] items-center justify-center rounded-full border-[3px] border-[#0a297c] text-[28px] font-serif font-black text-[#a86500]">
-                EL
-              </span>
-              <div>
-                <p className="text-[42px] font-serif leading-[.8] text-[#09216d]">
-                  Elidan<span className="text-[#bd7105]">Lord</span>
-                </p>
-                <p className="mt-2 border-y border-[#bd7105] px-10 text-[28px] tracking-[.22em] leading-none">
-                  MyTime
-                </p>
-                <p className="text-[11px] tracking-[.5em]">LLC</p>
-              </div>
+            <div className="flex items-center justify-center gap-2 mb-3">
+              <Image
+                src="/Logo.jpg"
+                width={270}
+                height={100}
+                quality={100}
+                loading="eager"
+                alt="MYTime Logo"
+              />
             </div>
             <h1 className="mt-[1mm] text-[34px] font-black leading-none tracking-[.03em]">
               5 FDA-APPROVED PEPTIDES
@@ -610,7 +607,7 @@ export default function PeptideDose({
             </p>
           </div>
         </header>
-        <div className="grid h-[145mm] grid-cols-5 gap-[2mm]">
+        <div className="grid h-[145mm] mt-6 grid-cols-5 gap-[2mm]">
           {recommendations.slice(0, 5).map((item) => (
             <TherapyCard
               key={item.treatment.id}
@@ -770,6 +767,48 @@ function TherapyCard({
     </article>
   );
 }
+// function Vial({
+//   recommendation,
+// }: {
+//   recommendation: PeptideDoseRecommendation;
+// }) {
+//   const { treatment } = recommendation;
+//   const tone = toneFor(treatment.id);
+//   return (
+//     <div className="mx-auto h-[53mm] w-[29mm] pt-[8mm]">
+//       <div className="relative">
+//         <div
+//           className="absolute left-0 top-0 h-[10mm] w-full rounded-[3mm] border-b-[2mm] border-[#59616a] shadow-[0_1mm_2mm_rgba(0,0,0,.35)]"
+//           style={{
+//             background: `linear-gradient(90deg,${tone.dark},${tone.primary},#fbfdff,${tone.primary},${tone.dark})`,
+//           }}
+//         />
+//         <div className="absolute left-[2mm] top-[8mm] h-[6mm] w-[25mm] rounded-b-[2mm] border-x border-b border-[#77818d] bg-[linear-gradient(90deg,#3f4953,#e8edf0_22%,#fff_50%,#4b5661_70%,#f2f4f5)]" />
+//         <div className="relative top-[13mm] min-h-[36mm] overflow-hidden rounded-b-[5mm] border-x border-b border-[#a6afb8] bg-[linear-gradient(90deg,#aeb8c1,#edf2f5_17%,#fff_36%,#eef2f5_60%,#fff_78%,#b2bbc4)] px-[2mm] pt-[7mm] text-center shadow-[inset_2mm_0_2mm_rgba(62,76,92,.15),inset_-2mm_0_2mm_rgba(62,76,92,.14),0_2mm_2mm_rgba(56,66,78,.18)] before:absolute before:left-[20%] before:top-0 before:h-full before:w-[14%] before:bg-white/40 before:blur-sm before:content-[''] after:absolute after:bottom-[1mm] after:left-[12%] after:h-[2mm] after:w-[76%] after:rounded-[50%] after:bg-slate-700/25 after:blur-sm after:content-['']">
+//           <div className="relative z-10">
+//             <p
+//               className="text-[13px] font-black leading-none"
+//               style={{ color: tone.dark }}
+//             >
+//               {treatment.therapy.toUpperCase()}
+//             </p>
+//             <p className="mt-[1mm] text-[9px] font-bold leading-none">
+//               {shortIngredient(treatment.activeIngredient)}
+//             </p>
+//             <p className="mt-[2mm] text-[9px] font-semibold">Injection</p>
+//             <p
+//               className="mt-[1mm] text-[11px] font-black"
+//               style={{ color: tone.primary }}
+//             >
+//               {formatDose(recommendation.recommendedDose, recommendation.unit)}
+//             </p>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
 function Vial({
   recommendation,
 }: {
@@ -779,34 +818,15 @@ function Vial({
   const tone = toneFor(treatment.id);
   return (
     <div className="mx-auto h-[53mm] w-[29mm] pt-[8mm]">
-      <div className="relative">
-        <div
-          className="absolute left-0 top-0 h-[10mm] w-full rounded-[3mm] border-b-[2mm] border-[#59616a] shadow-[0_1mm_2mm_rgba(0,0,0,.35)]"
-          style={{
-            background: `linear-gradient(90deg,${tone.dark},${tone.primary},#fbfdff,${tone.primary},${tone.dark})`,
-          }}
+      <div className="relative ml-[-37px] w-[170px] h-[170px]">
+        <Image
+          src={`/${treatment.id}.jpg`}
+          fill
+          loading="eager"
+          alt={`${treatment.id} Image`}
+          quality={100}
+          className="object-contain"
         />
-        <div className="absolute left-[2mm] top-[8mm] h-[6mm] w-[25mm] rounded-b-[2mm] border-x border-b border-[#77818d] bg-[linear-gradient(90deg,#3f4953,#e8edf0_22%,#fff_50%,#4b5661_70%,#f2f4f5)]" />
-        <div className="relative top-[13mm] min-h-[36mm] overflow-hidden rounded-b-[5mm] border-x border-b border-[#a6afb8] bg-[linear-gradient(90deg,#aeb8c1,#edf2f5_17%,#fff_36%,#eef2f5_60%,#fff_78%,#b2bbc4)] px-[2mm] pt-[7mm] text-center shadow-[inset_2mm_0_2mm_rgba(62,76,92,.15),inset_-2mm_0_2mm_rgba(62,76,92,.14),0_2mm_2mm_rgba(56,66,78,.18)] before:absolute before:left-[20%] before:top-0 before:h-full before:w-[14%] before:bg-white/40 before:blur-sm before:content-[''] after:absolute after:bottom-[1mm] after:left-[12%] after:h-[2mm] after:w-[76%] after:rounded-[50%] after:bg-slate-700/25 after:blur-sm after:content-['']">
-          <div className="relative z-10">
-            <p
-              className="text-[13px] font-black leading-none"
-              style={{ color: tone.dark }}
-            >
-              {treatment.therapy.toUpperCase()}
-            </p>
-            <p className="mt-[1mm] text-[9px] font-bold leading-none">
-              {shortIngredient(treatment.activeIngredient)}
-            </p>
-            <p className="mt-[2mm] text-[9px] font-semibold">Injection</p>
-            <p
-              className="mt-[1mm] text-[11px] font-black"
-              style={{ color: tone.primary }}
-            >
-              {formatDose(recommendation.recommendedDose, recommendation.unit)}
-            </p>
-          </div>
-        </div>
       </div>
     </div>
   );

@@ -13,6 +13,7 @@ import {
   Syringe,
   Zap,
 } from "lucide-react";
+import Image from "next/image";
 
 export interface NueronMoringaDropsReportProps {
   productName: string;
@@ -202,6 +203,36 @@ function MoringaCard() {
     </aside>
   );
 }
+// function Bottle({
+//   productName,
+//   activeIngredients,
+//   dose,
+// }: {
+//   productName: string;
+//   activeIngredients: string;
+//   dose: string;
+// }) {
+//   return (
+//     <div className="relative h-[315px] w-[220px] pt-10">
+//       <div className="absolute left-[74px] top-0 h-[56px] w-[72px] rounded-t-[15px] border-x-[8px] border-[#1b1d22] bg-[linear-gradient(90deg,#17191c,#52585d,#111316)]" />
+//       <div className="absolute left-[56px] top-[40px] h-[45px] w-[108px] rounded-[8px] bg-[repeating-linear-gradient(90deg,#111_0_5px,#3a3a3a_5px_9px)] shadow-md" />
+//       <div className="absolute left-[34px] top-[75px] h-[230px] w-[152px] overflow-hidden rounded-b-[24px] border-x-[5px] border-b-[6px] border-[#12203a] bg-[linear-gradient(90deg,#030816,#0d42ad_14%,#09206f_48%,#0d4ec3_82%,#020713)] shadow-[inset_13px_0_16px_rgba(0,0,0,.5),inset_-12px_0_16px_rgba(0,0,0,.5),0_10px_15px_rgba(19,35,77,.35)] before:absolute before:left-[20px] before:top-0 before:h-full before:w-[18px] before:bg-white/20 before:blur-sm before:content-['']">
+//         <div className="absolute left-[13px] top-[60px] w-[116px] rounded-[4px] bg-[linear-gradient(120deg,#f9f4d5,#e8dfb5_40%,#fffbea_70%,#d6cb9a)] px-2 py-3 text-center text-[#061964]">
+//           <p className="text-[11px] font-serif font-black italic">ELIDANLORD</p>
+//           <p className="mt-3 text-[21px] font-black leading-[.8]">
+//             {productName.replace("®", "").toUpperCase().replace(" ", "\n")}
+//           </p>
+//           <p className="mt-2 text-[6px] font-semibold">{activeIngredients}</p>
+//           <div className="my-2 h-px bg-[#081e6a]" />
+//           <p className="text-[7px] font-black">Daily supplement</p>
+//           <p className="mt-1 text-[8px] font-black">{dose}</p>
+//           <p className="mt-3 text-[10px] font-black">1 OZ / 30 ML</p>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
 function Bottle({
   productName,
   activeIngredients,
@@ -213,21 +244,14 @@ function Bottle({
 }) {
   return (
     <div className="relative h-[315px] w-[220px] pt-10">
-      <div className="absolute left-[74px] top-0 h-[56px] w-[72px] rounded-t-[15px] border-x-[8px] border-[#1b1d22] bg-[linear-gradient(90deg,#17191c,#52585d,#111316)]" />
-      <div className="absolute left-[56px] top-[40px] h-[45px] w-[108px] rounded-[8px] bg-[repeating-linear-gradient(90deg,#111_0_5px,#3a3a3a_5px_9px)] shadow-md" />
-      <div className="absolute left-[34px] top-[75px] h-[230px] w-[152px] overflow-hidden rounded-b-[24px] border-x-[5px] border-b-[6px] border-[#12203a] bg-[linear-gradient(90deg,#030816,#0d42ad_14%,#09206f_48%,#0d4ec3_82%,#020713)] shadow-[inset_13px_0_16px_rgba(0,0,0,.5),inset_-12px_0_16px_rgba(0,0,0,.5),0_10px_15px_rgba(19,35,77,.35)] before:absolute before:left-[20px] before:top-0 before:h-full before:w-[18px] before:bg-white/20 before:blur-sm before:content-['']">
-        <div className="absolute left-[13px] top-[60px] w-[116px] rounded-[4px] bg-[linear-gradient(120deg,#f9f4d5,#e8dfb5_40%,#fffbea_70%,#d6cb9a)] px-2 py-3 text-center text-[#061964]">
-          <p className="text-[11px] font-serif font-black italic">ELIDANLORD</p>
-          <p className="mt-3 text-[21px] font-black leading-[.8]">
-            {productName.replace("®", "").toUpperCase().replace(" ", "\n")}
-          </p>
-          <p className="mt-2 text-[6px] font-semibold">{activeIngredients}</p>
-          <div className="my-2 h-px bg-[#081e6a]" />
-          <p className="text-[7px] font-black">Daily supplement</p>
-          <p className="mt-1 text-[8px] font-black">{dose}</p>
-          <p className="mt-3 text-[10px] font-black">1 OZ / 30 ML</p>
-        </div>
-      </div>
+      <Image
+        src="/neuron-bottle.png"
+        fill
+        loading="eager"
+        alt={` Image`}
+        quality={100}
+        className="object-contain"
+      />
     </div>
   );
 }

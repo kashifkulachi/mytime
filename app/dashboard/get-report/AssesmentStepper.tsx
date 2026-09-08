@@ -55,24 +55,6 @@ export default function AssessmentStepper() {
 
   const [isSubmitting, startSubmissionTransition] = useTransition();
 
-  // const testInput: IFIFormulaInput = {
-  //   dateOfBirth: "1995-05-20",
-  //   age: 31,
-  //   sex: "male",
-  //   heightCm: 175,
-  //   weightKg: 72,
-  //   bmi: 23.51,
-  //   frequency: 124.8,
-  //   intensity: 68.4,
-  //   amplitude: Number.NaN,
-  //   spo2: 98,
-  //   heartRate: 76,
-  // };
-
-  // validateFormulaInput(testInput);
-
-  // console.log("Formula input is valid.");
-
   const activeStepSnapshot = useSyncExternalStore(
     subscribeToAssessmentStep,
     getStoredAssessmentStep,

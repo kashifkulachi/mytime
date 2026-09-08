@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/*": ["./node_modules/@sparticuz/chromium/bin/**/*"],
   },
+  images: {
+    qualities: [75, 100],
+  },
 };
 
 export default nextConfig;

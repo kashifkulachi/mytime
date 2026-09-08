@@ -140,7 +140,7 @@ export function RecordingPanel() {
       </div>
 
       <div
-        className={`p-5 grid md:grid-cols-3 mt-5 wrap-anywhere gap-2 ${status === "ready" ? `md:translate-x-1/5 lg:translate-x-40` : ""}`}
+        className={`p-5 grid md:grid-cols-[1fr_auto_auto] mt-5  wrap-anywhere gap-2`}
       >
         <VoiceRecorder
           isRecording={isRecording}

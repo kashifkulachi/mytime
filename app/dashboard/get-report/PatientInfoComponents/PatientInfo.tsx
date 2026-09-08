@@ -23,7 +23,7 @@ import type {
 import {
   patientInfoFormSchema,
   type PatientInfoFormValues,
-} from "@/lib/validations/assessment.schema";
+} from "@/lib/schemas/assessment.schema";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -68,6 +68,7 @@ import {
   prepareHBOTInput,
   validateHBOTInput,
 } from "@/lib/calculations/Hbot";
+import { clearStoredAssessmentStep } from "@/lib/assessment/assessmentStepStorage";
 // import { calculateAllPeptideDoses } from "@/lib/calculations/Pepdie-dose";
 
 const EMPTY_FORM_VALUES: PatientInfoFormValues = {
@@ -211,7 +212,8 @@ function getPatientFormValues(
 }
 
 export default function PatientInfo() {
-  const { assessment, updatePatient, setResult } = useAssessment();
+  const { assessment, updatePatient, setResult, resetAssessment, subject } =
+    useAssessment();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const router = useRouter();
 
@@ -276,146 +278,447 @@ export default function PatientInfo() {
     onChange(Number.isFinite(parsedValue) ? parsedValue : 0);
   }
 
-  async function handleSavePatient(
+  // Before the Doctor Assessment has implement
+  // async function handleSubmitPatient(
+  //   values: PatientInfoFormValues,
+  // ): Promise<void> {
+  //   setIsSubmitting(true);
+  //   const age = calculateAge(values.dateOfBirth);
+
+  //   if (age === null) {
+  //     form.setError("dateOfBirth", {
+  //       type: "manual",
+  //       message: "Please enter a valid date of birth.",
+  //     });
+
+  //     return;
+  //   }
+
+  //   const bmi = calculateBmi(values.heightCm, values.weightKg);
+
+  //   if (bmi === null) {
+  //     const message = "Enter a valid height and weight to calculate BMI.";
+
+  //     form.setError("heightCm", {
+  //       type: "manual",
+  //       message,
+  //     });
+
+  //     form.setError("weightKg", {
+  //       type: "manual",
+  //       message,
+  //     });
+
+  //     return;
+  //   }
+
+  //   /*
+  //    * Use the freshly calculated age and BMI instead of
+  //    * relying on a possibly delayed form-state update.
+  //    */
+  //   const patientData: PatientInfoType = {
+  //     patientName: values.patientName,
+  //     dateOfBirth: values.dateOfBirth,
+  //     age,
+  //     sex: values.sex,
+  //     heightCm: values.heightCm,
+  //     weightKg: values.weightKg,
+  //     bmi,
+  //   };
+
+  //   updatePatient(patientData);
+
+  //   const updatedAssessment = {
+  //     ...assessment,
+  //     patient: patientData,
+  //   };
+
+  //   // ifi
+
+  //   const ififormulaInput = prepareFormulaInput(updatedAssessment);
+
+  //   validateFormulaInput(ififormulaInput);
+
+  //   const ifiResult = calculateIFI(ififormulaInput);
+
+  //   // Biological
+
+  //   const biologicalAgeInput = prepareBiologicalAgeInput({
+  //     assessment: updatedAssessment,
+  //     ifiResult: ifiResult,
+  //   });
+
+  //   validateBiologicalAgeInput(biologicalAgeInput);
+
+  //   const biologicalAgeResult = calculateBiologicalAge(biologicalAgeInput);
+
+  //   // Inflammation Index
+
+  //   // const inflammationInput = prepareInflammationIndexInput({
+  //   //   assessment: updatedAssessment,
+  //   //   ifiResult,
+  //   // });
+
+  //   // validateInflammationIndexInput(inflammationInput);
+
+  //   // const inflammationIndexResult =
+  //   //   calculateInflammationIndex(inflammationInput);
+
+  //   const peptideDosageInput = preparePeptideDoseInput({
+  //     ifiResult: ifiResult,
+  //     patient: patientData,
+  //   });
+
+  //   validatePeptideDoseInput(peptideDosageInput);
+
+  //   const peptideDoseResult = calculatePeptideDose(peptideDosageInput);
+
+  //   const hbotInput = prepareHBOTInput(ifiResult);
+
+  //   validateHBOTInput(hbotInput);
+
+  //   const HBOTCalculatedSessions = calculateHBOT(hbotInput);
+
+  //   const assessmentResult: AssessmentResult = {
+  //     IFI: ifiResult,
+  //     BiologicalAge: biologicalAgeResult,
+  //     PeptideDose: peptideDoseResult,
+  //     HBOTSessions: HBOTCalculatedSessions,
+  //   };
+
+  //   setResult(assessmentResult);
+
+  //   try {
+  //     const response = await fetch("/api/reports", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         patient: {
+  //           name: patientData.patientName,
+  //           dateOfBirth: patientData.dateOfBirth,
+  //           evaluationDate: biologicalAgeResult.evaluationDate,
+  //           gender: patientData.sex,
+  //         },
+
+  //         results: {
+  //           IFI: ifiResult,
+  //           BiologicalAge: biologicalAgeResult,
+  //           PeptideDose: peptideDoseResult,
+  //           HBOTSessions: HBOTCalculatedSessions,
+  //         },
+  //       }),
+  //     });
+
+  //     const data: unknown = await response.json();
+
+  //     if (!response.ok) {
+  //       console.error("Failed to create report:", data);
+
+  //       throw new Error("Failed to create report.");
+  //     }
+
+  //     if (
+  //       typeof data !== "object" ||
+  //       data === null ||
+  //       !("report" in data) ||
+  //       typeof data.report !== "object" ||
+  //       data.report === null ||
+  //       !("id" in data.report) ||
+  //       typeof data.report.id !== "string"
+  //     ) {
+  //       throw new Error(
+  //         "Report was created, but the server returned an invalid report ID.",
+  //       );
+  //     }
+
+  //     const reportId = data.report.id;
+
+  //     // resetAssessment();
+  //     // clearStoredAssessmentStep();
+
+  //     router.push(`/dashboard/reports/${reportId}`);
+  //   } catch (error) {
+  //     console.error("Report creation failed:", error);
+  //     toast.error("Report creation failed");
+  //     return;
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+
+  //   // console.log("Peptide Dose: ", peptideDoseResult);
+
+  //   // router.push("/dashboard/latest-report");
+
+  //   toast.success("Submitted redirecting...");
+  // }
+
+  async function handleSubmitPatient(
     values: PatientInfoFormValues,
   ): Promise<void> {
     setIsSubmitting(true);
-    const age = calculateAge(values.dateOfBirth);
-
-    if (age === null) {
-      form.setError("dateOfBirth", {
-        type: "manual",
-        message: "Please enter a valid date of birth.",
-      });
-
-      return;
-    }
-
-    const bmi = calculateBmi(values.heightCm, values.weightKg);
-
-    if (bmi === null) {
-      const message = "Enter a valid height and weight to calculate BMI.";
-
-      form.setError("heightCm", {
-        type: "manual",
-        message,
-      });
-
-      form.setError("weightKg", {
-        type: "manual",
-        message,
-      });
-
-      return;
-    }
-
-    /*
-     * Use the freshly calculated age and BMI instead of
-     * relying on a possibly delayed form-state update.
-     */
-    const patientData: PatientInfoType = {
-      patientName: values.patientName,
-      dateOfBirth: values.dateOfBirth,
-      age,
-      sex: values.sex,
-      heightCm: values.heightCm,
-      weightKg: values.weightKg,
-      bmi,
-    };
-
-    updatePatient(patientData);
-
-    const updatedAssessment = {
-      ...assessment,
-      patient: patientData,
-    };
-
-    // ifi
-
-    const ififormulaInput = prepareFormulaInput(updatedAssessment);
-
-    validateFormulaInput(ififormulaInput);
-
-    const ifiResult = calculateIFI(ififormulaInput);
-
-    // Biological
-
-    const biologicalAgeInput = prepareBiologicalAgeInput({
-      assessment: updatedAssessment,
-      ifiResult: ifiResult,
-    });
-
-    validateBiologicalAgeInput(biologicalAgeInput);
-
-    const biologicalAgeResult = calculateBiologicalAge(biologicalAgeInput);
-
-    // Inflammation Index
-
-    // const inflammationInput = prepareInflammationIndexInput({
-    //   assessment: updatedAssessment,
-    //   ifiResult,
-    // });
-
-    // validateInflammationIndexInput(inflammationInput);
-
-    // const inflammationIndexResult =
-    //   calculateInflammationIndex(inflammationInput);
-
-    const peptideDosageInput = preparePeptideDoseInput({
-      ifiResult: ifiResult,
-      patient: patientData,
-    });
-
-    validatePeptideDoseInput(peptideDosageInput);
-
-    const peptideDoseResult = calculatePeptideDose(peptideDosageInput);
-
-    const hbotInput = prepareHBOTInput(ifiResult);
-
-    validateHBOTInput(hbotInput);
-
-    const HBOTCalculatedSessions = calculateHBOT(hbotInput);
-
-    const assessmentResult: AssessmentResult = {
-      IFI: ifiResult,
-      BiologicalAge: biologicalAgeResult,
-      PeptideDose: peptideDoseResult,
-      HBOTSessions: HBOTCalculatedSessions,
-    };
-
-    setResult(assessmentResult);
 
     try {
-      const response = await fetch("/api/reports", {
+      /**
+       * --------------------------------------------------------
+       * 1. VALIDATE PATIENT DATA
+       * --------------------------------------------------------
+       */
+      const age = calculateAge(values.dateOfBirth);
+
+      if (age === null) {
+        form.setError("dateOfBirth", {
+          type: "manual",
+          message: "Please enter a valid date of birth.",
+        });
+
+        return;
+      }
+
+      const bmi = calculateBmi(values.heightCm, values.weightKg);
+
+      if (bmi === null) {
+        const message = "Enter a valid height and weight to calculate BMI.";
+
+        form.setError("heightCm", {
+          type: "manual",
+          message,
+        });
+
+        form.setError("weightKg", {
+          type: "manual",
+          message,
+        });
+
+        return;
+      }
+
+      /**
+       * --------------------------------------------------------
+       * 2. BUILD PATIENT DATA
+       * --------------------------------------------------------
+       */
+      const patientData: PatientInfoType = {
+        patientName: values.patientName,
+
+        dateOfBirth: values.dateOfBirth,
+
+        age,
+
+        sex: values.sex,
+
+        heightCm: values.heightCm,
+
+        weightKg: values.weightKg,
+
+        bmi,
+      };
+
+      updatePatient(patientData);
+
+      /**
+       * React/context state may not have updated yet, so continue
+       * using the freshly-created patient object.
+       */
+      const updatedAssessment = {
+        ...assessment,
+        patient: patientData,
+      };
+
+      /**
+       * --------------------------------------------------------
+       * 3. IFI
+       * --------------------------------------------------------
+       */
+      const ififormulaInput = prepareFormulaInput(updatedAssessment);
+
+      validateFormulaInput(ififormulaInput);
+
+      const ifiResult = calculateIFI(ififormulaInput);
+
+      /**
+       * --------------------------------------------------------
+       * 4. BIOLOGICAL AGE
+       * --------------------------------------------------------
+       */
+      const biologicalAgeInput = prepareBiologicalAgeInput({
+        assessment: updatedAssessment,
+
+        ifiResult,
+      });
+
+      validateBiologicalAgeInput(biologicalAgeInput);
+
+      const biologicalAgeResult = calculateBiologicalAge(biologicalAgeInput);
+
+      /**
+       * --------------------------------------------------------
+       * 5. PEPTIDE DOSAGE
+       * --------------------------------------------------------
+       */
+      const peptideDosageInput = preparePeptideDoseInput({
+        ifiResult,
+
+        patient: patientData,
+      });
+
+      validatePeptideDoseInput(peptideDosageInput);
+
+      const peptideDoseResult = calculatePeptideDose(peptideDosageInput);
+
+      /**
+       * --------------------------------------------------------
+       * 6. HBOT
+       * --------------------------------------------------------
+       */
+      const hbotInput = prepareHBOTInput(ifiResult);
+
+      validateHBOTInput(hbotInput);
+
+      const HBOTCalculatedSessions = calculateHBOT(hbotInput);
+
+      /**
+       * --------------------------------------------------------
+       * 7. SAVE CALCULATION RESULTS LOCALLY
+       * --------------------------------------------------------
+       */
+      const assessmentResult: AssessmentResult = {
+        IFI: ifiResult,
+
+        BiologicalAge: biologicalAgeResult,
+
+        PeptideDose: peptideDoseResult,
+
+        HBOTSessions: HBOTCalculatedSessions,
+      };
+
+      setResult(assessmentResult);
+
+      /**
+       * --------------------------------------------------------
+       * 8. DETERMINE SECURE REPORT ENDPOINT
+       * --------------------------------------------------------
+       *
+       * IMPORTANT:
+       *
+       * We never send patientId from the browser.
+       *
+       * Patient self-assessment:
+       *
+       *   POST /api/reports
+       *
+       * Doctor assessment:
+       *
+       *   POST
+       *   /api/doctor/patients/{relationshipId}/reports
+       *
+       * The doctor API resolves patientId securely on the server.
+       */
+      let reportEndpoint: string;
+
+      if (subject?.mode === "doctor-patient") {
+        reportEndpoint = `/api/doctor/patients/${encodeURIComponent(
+          subject.relationshipId,
+        )}/reports`;
+      } else {
+        /**
+         * Existing self-assessment behavior.
+         *
+         * We'll make the self-assessment initialization explicit
+         * shortly, but this fallback preserves your current
+         * working /dashboard/get-report flow for now.
+         */
+        reportEndpoint = "/api/reports";
+      }
+
+      /**
+       * --------------------------------------------------------
+       * 9. CREATE REPORT
+       * --------------------------------------------------------
+       */
+      const response = await fetch(reportEndpoint, {
         method: "POST",
+
         headers: {
           "Content-Type": "application/json",
         },
+
         body: JSON.stringify({
           patient: {
             name: patientData.patientName,
+
             dateOfBirth: patientData.dateOfBirth,
+
             evaluationDate: biologicalAgeResult.evaluationDate,
+
             gender: patientData.sex,
           },
 
           results: {
             IFI: ifiResult,
+
             BiologicalAge: biologicalAgeResult,
+
             PeptideDose: peptideDoseResult,
+
             HBOTSessions: HBOTCalculatedSessions,
           },
         }),
       });
 
-      const data: unknown = await response.json();
+      /**
+       * --------------------------------------------------------
+       * 10. SAFELY READ API RESPONSE
+       * --------------------------------------------------------
+       */
+      const data: unknown = await response.json().catch(() => null);
 
-      if (!response.ok) {
-        console.error("Failed to create report:", data);
+      /**
+       * Authentication expired while assessment was open.
+       */
+      if (response.status === 401) {
+        toast.error("Your session has expired. Please sign in again.");
 
-        throw new Error("Failed to create report.");
+        router.push("/login");
+
+        return;
       }
 
+      /**
+       * Doctor no longer has access to this patient.
+       *
+       * This can happen if the relationship was revoked while
+       * the assessment was being completed.
+       */
+      if (response.status === 403 || response.status === 404) {
+        if (subject?.mode === "doctor-patient") {
+          toast.error(
+            getApiErrorMessage(
+              data,
+              "You no longer have access to this patient.",
+            ),
+          );
+
+          router.push("/dashboard/patients");
+
+          return;
+        }
+      }
+
+      if (!response.ok) {
+        const message = getApiErrorMessage(data, "Failed to create report.");
+
+        console.error("Failed to create report:", data);
+
+        throw new Error(message);
+      }
+
+      /**
+       * --------------------------------------------------------
+       * 11. VALIDATE REPORT ID
+       * --------------------------------------------------------
+       */
       if (
         typeof data !== "object" ||
         data === null ||
@@ -423,7 +726,8 @@ export default function PatientInfo() {
         typeof data.report !== "object" ||
         data.report === null ||
         !("id" in data.report) ||
-        typeof data.report.id !== "string"
+        typeof data.report.id !== "string" ||
+        !data.report.id.trim()
       ) {
         throw new Error(
           "Report was created, but the server returned an invalid report ID.",
@@ -432,20 +736,41 @@ export default function PatientInfo() {
 
       const reportId = data.report.id;
 
-      router.push(`/dashboard/reports/${reportId}`);
+      toast.success("Assessment submitted successfully.");
+
+      /**
+       * --------------------------------------------------------
+       * 12. REDIRECT
+       * --------------------------------------------------------
+       *
+       * We can keep your existing report-generation page for both
+       * workflows because its authorization already understands
+       * doctor-patient relationships.
+       */
+      router.push(`/dashboard/reports/${encodeURIComponent(reportId)}`);
+
+      /**
+       * Do NOT reset here yet.
+       *
+       * Your report page transition/generation flow already works,
+       * and we don't want to introduce another behavior change in
+       * this step.
+       *
+       * We'll decide the correct completion/reset boundary once
+       * both doctor and patient submission flows are tested.
+       */
     } catch (error) {
       console.error("Report creation failed:", error);
-      toast.error("Report creation failed");
-      return;
+
+      toast.error(
+        error instanceof Error ? error.message : "Report creation failed.",
+      );
     } finally {
+      /**
+       * Also fixes your existing age/BMI early-return bug.
+       */
       setIsSubmitting(false);
     }
-
-    // console.log("Peptide Dose: ", peptideDoseResult);
-
-    // router.push("/dashboard/latest-report");
-
-    toast.success("Submitted redirecting...");
   }
 
   return (
@@ -462,7 +787,7 @@ export default function PatientInfo() {
       <CardContent className="px-5 py-7 sm:px-8 sm:py-9">
         <form
           id="patient-information-form"
-          onSubmit={form.handleSubmit(handleSavePatient)}
+          onSubmit={form.handleSubmit(handleSubmitPatient)}
           noValidate
         >
           <FieldGroup className="grid gap-7 md:grid-cols-2">
@@ -790,4 +1115,18 @@ export default function PatientInfo() {
       </CardContent>
     </Card>
   );
+}
+
+function getApiErrorMessage(data: unknown, fallback: string): string {
+  if (
+    typeof data !== "object" ||
+    data === null ||
+    !("message" in data) ||
+    typeof data.message !== "string" ||
+    !data.message.trim()
+  ) {
+    return fallback;
+  }
+
+  return data.message;
 }

@@ -2,7 +2,12 @@ import "server-only";
 
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
-export type ReportPdfStatus = "pending" | "generating" | "ready" | "failed";
+export type ReportPdfStatus =
+  | "pending"
+  | "generating"
+  | "ready"
+  | "failed"
+  | "queued";
 
 interface UpdateReportPdfStatusInput {
   reportId: string;

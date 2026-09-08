@@ -107,11 +107,11 @@ body {
 }
 
 :root {
-  /* --primary: #12355b; */
-  /* --on-primary: #ffffff;
+  --primary: #12355b;
+  --on-primary: #ffffff;
   --secondary: #2e6cf6;
   --tertiary: #14b8a6;
-  --neutral: #475569; */
+  --neutral: #475569;
   --error-container: #ffdad6;
   --on-error-container: #93000a;
   --background: oklch(1 0 0);
