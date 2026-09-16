@@ -168,18 +168,12 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 import {
-  Calendar,
-  ChartBar,
   File,
-  FileScanIcon,
-  Fingerprint,
   Folder,
   HelpCircle,
   LayoutDashboard,
   Menu,
-  MonitorCheck,
   ScanFace,
-  Settings,
   Stethoscope,
   UsersRound,
   X,
@@ -260,12 +254,12 @@ const menuItems: MenuItem[] = [
     name: "Medical Records",
     href: "/dashboard/medical-records",
     icon: Folder,
-    roles: ["patient", "doctor", "super_admin"],
+    roles: ["patient"],
   },
 
   {
     name: "IFI Monitoring",
-    href: "/dashboard/settings",
+    href: "/dashboard/ifi-monitoring",
     icon: ScanFace,
     roles: ["patient"],
   },

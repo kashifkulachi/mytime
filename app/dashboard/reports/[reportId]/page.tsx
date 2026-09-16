@@ -1856,7 +1856,7 @@ export default function ReportPage() {
                     void handleDownload();
                   }}
                   disabled={isDownloading || isGenerating}
-                  className="mt-7 inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-[#032d55] px-7 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#062542] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="mt-7 inline-flex cursor-pointer min-h-11 items-center justify-center gap-2 rounded-md bg-[#032d55] px-7 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#062542] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {isDownloading || isGenerating ? (
                     <LoaderCircle className="h-4 w-4 animate-spin" />
@@ -1910,7 +1910,7 @@ export default function ReportPage() {
                     void handleRetryGeneration();
                   }}
                   disabled={isGenerating}
-                  className="mt-7 inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-[#032d55] px-7 py-3 text-sm font-semibold text-white disabled:opacity-60"
+                  className="mt-7 inline-flex min-h-11 items-center cursor-pointer justify-center gap-2 rounded-md bg-[#032d55] px-7 py-3 text-sm font-semibold text-white disabled:opacity-60"
                 >
                   <RefreshCw
                     className={`h-4 w-4 ${isGenerating ? "animate-spin" : ""}`}

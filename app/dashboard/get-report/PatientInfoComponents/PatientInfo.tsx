@@ -650,7 +650,8 @@ export default function PatientInfo() {
 
             dateOfBirth: patientData.dateOfBirth,
 
-            evaluationDate: biologicalAgeResult.evaluationDate,
+            // evaluationDate: biologicalAgeResult.evaluationDate,
+            evaluationDate: "2026-10-02",
 
             gender: patientData.sex,
           },
@@ -747,7 +748,7 @@ export default function PatientInfo() {
        * workflows because its authorization already understands
        * doctor-patient relationships.
        */
-      router.push(`/dashboard/reports/${encodeURIComponent(reportId)}`);
+      // router.push(`/dashboard/reports/${encodeURIComponent(reportId)}`);
 
       /**
        * Do NOT reset here yet.

@@ -233,7 +233,7 @@ export default function DoctorPatientWorkspacePage() {
     router.push(
       `/dashboard/patients/${encodeURIComponent(
         workspace.relationshipId,
-      )}/reports`,
+      )}/medical-records`,
     );
   }
 

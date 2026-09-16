@@ -230,6 +230,7 @@ import { NextResponse } from "next/server";
 import { requireCurrentProfile } from "@/lib/auth/requireCurrentProfile";
 import { createReportSchema } from "@/lib/schemas/report.schema";
 import { createReport } from "@/services/database/reports/createReport";
+import { getIFIFunctionalProfile } from "@/services/database/reports/getIFIFunctionalProfile";
 
 export const runtime = "nodejs";
 
@@ -350,18 +351,99 @@ export async function POST(request: Request): Promise<Response> {
 
     /**
      * --------------------------------------------------------
-     * 5. CREATE TRUSTWORTHY OWNERSHIP
+     * 5. RESOLVE IFI FUNCTIONAL PROFILE VERSION
      * --------------------------------------------------------
      *
-     * Current flow:
+     * The browser does NOT tell us which clinical profile
+     * version should be attached to the report.
+     *
+     * We resolve the currently active profile server-side using
+     * the validated assessment result:
+     *
+     * gender + IFI Range
+     *      ↓
+     * active IFI functional profile
+     *      ↓
+     * profile.version
+     *
+     * createReport() then snapshots that version into the
+     * reports row.
+     */
+
+    const ifiRange = results.IFI.ifiRange;
+
+    if (!Number.isInteger(ifiRange) || ifiRange < 0 || ifiRange > 25) {
+      console.error(
+        "[Create Report] Invalid IFI Range while resolving functional profile:",
+        {
+          ifiRange,
+        },
+      );
+
+      return NextResponse.json(
+        {
+          success: false,
+          code: "INVALID_IFI_RANGE",
+          message: "The calculated IFI Range is invalid.",
+        },
+        {
+          status: 400,
+        },
+      );
+    }
+
+    let ifiFunctionalProfile;
+
+    try {
+      ifiFunctionalProfile = await getIFIFunctionalProfile({
+        sex: patient.gender,
+        ifiRange,
+      });
+    } catch (error) {
+      console.error(
+        "[Create Report] Failed to resolve active IFI functional profile:",
+        {
+          gender: patient.gender,
+
+          ifiRange,
+
+          error: error instanceof Error ? error.message : "Unknown error",
+        },
+      );
+
+      return NextResponse.json(
+        {
+          success: false,
+          code: "IFI_FUNCTIONAL_PROFILE_NOT_FOUND",
+
+          message:
+            "Unable to resolve the IFI functional profile for this assessment.",
+        },
+        {
+          status: 500,
+        },
+      );
+    }
+
+    /**
+     * --------------------------------------------------------
+     * 6. CREATE TRUSTWORTHY OWNERSHIP + REPORT SNAPSHOT
+     * --------------------------------------------------------
      *
      * authenticated patient
-     *       ↓
+     *        ↓
      * patient_id = profile.id
      * created_by_user_id = profile.id
      *
-     * Neither value is accepted from the browser.
+     * Clinical profile version:
+     *
+     * active functional profile
+     *        ↓
+     * ifi_functional_profile_version
+     *
+     * None of these trusted values come from the browser.
      */
+
     const report = await createReport({
       patientId: profile.id,
 
@@ -374,6 +456,8 @@ export async function POST(request: Request): Promise<Response> {
       evaluationDate: patient.evaluationDate,
 
       gender: patient.gender,
+
+      ifiFunctionalProfileVersion: ifiFunctionalProfile.version,
 
       results: {
         IFI: results.IFI,

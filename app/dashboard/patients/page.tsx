@@ -588,7 +588,7 @@ export default function DoctorPatientsPage() {
                     </div>
 
                     <div className="flex items-center gap-2 self-end text-sm font-semibold text-[#063467] sm:self-auto">
-                      Open Patient
+                      Select Patient
                       <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </div>
                   </button>

@@ -4,6 +4,7 @@ import { requireCurrentProfile } from "@/lib/auth/requireCurrentProfile";
 import { createReportSchema } from "@/lib/schemas/report.schema";
 import { createReport } from "@/services/database/reports/createReport";
 import { getDoctorPatientByRelationshipId } from "@/services/database/relationships/getDoctorPatientByRelationshipId";
+import { getIFIFunctionalProfile } from "@/services/database/reports/getIFIFunctionalProfile";
 
 export const runtime = "nodejs";
 
@@ -184,37 +185,121 @@ export async function POST(
 
     /**
      * --------------------------------------------------------
-     * 7. CREATE REPORT WITH TRUSTED OWNERSHIP
+     * 7. RESOLVE IFI FUNCTIONAL PROFILE VERSION
      * --------------------------------------------------------
      *
-     * This is the critical difference from patient self-report:
+     * The functional-profile version is trusted clinical
+     * metadata and must never come from the browser.
+     *
+     * We resolve it from:
+     *
+     * validated patient gender
+     *        +
+     * calculated IFI Range
+     *        ↓
+     * active IFI functional profile
+     *        ↓
+     * profile.version
+     *
+     * That version is then permanently stored with the report.
+     */
+
+    const ifiRange = results.IFI.ifiRange;
+
+    if (!Number.isInteger(ifiRange) || ifiRange < 0 || ifiRange > 25) {
+      console.error(
+        "[Doctor Create Report] Invalid IFI Range while resolving functional profile:",
+        {
+          relationshipId: normalizedRelationshipId,
+
+          ifiRange,
+        },
+      );
+
+      return NextResponse.json(
+        {
+          success: false,
+          code: "INVALID_IFI_RANGE",
+          message: "The calculated IFI Range is invalid.",
+        },
+        {
+          status: 400,
+        },
+      );
+    }
+
+    let ifiFunctionalProfile;
+
+    try {
+      ifiFunctionalProfile = await getIFIFunctionalProfile({
+        sex: patient.gender,
+        ifiRange,
+      });
+    } catch (error) {
+      console.error(
+        "[Doctor Create Report] Failed to resolve active IFI functional profile:",
+        {
+          relationshipId: normalizedRelationshipId,
+
+          gender: patient.gender,
+
+          ifiRange,
+
+          error: error instanceof Error ? error.message : "Unknown error",
+        },
+      );
+
+      return NextResponse.json(
+        {
+          success: false,
+          code: "IFI_FUNCTIONAL_PROFILE_NOT_FOUND",
+
+          message:
+            "Unable to resolve the IFI functional profile for this assessment.",
+        },
+        {
+          status: 500,
+        },
+      );
+    }
+
+    /**
+     * --------------------------------------------------------
+     * 8. CREATE REPORT WITH TRUSTED OWNERSHIP
+     * --------------------------------------------------------
      *
      * patient_id
-     *   = internally resolved linked patient
+     *   = patient resolved from the verified active relationship
      *
      * created_by_user_id
      *   = authenticated doctor
      *
-     * Browser can never choose either UUID.
+     * ifi_functional_profile_version
+     *   = version resolved server-side from the active clinical
+     *     functional profile
+     *
+     * None of these trusted values are supplied by the browser.
      */
+
     const report = await createReport({
       patientId: relationship.patientId,
 
       createdByUserId: profile.id,
 
       /**
-       * Prefer the linked patient's authenticated profile name.
-       *  relationship.patient.fullName?.trim() ||
-       * If the profile has no name yet, fall back to the
-       * validated assessment payload.
+       * Continue using the validated assessment patient name
+       * for the current workflow.
        */
       patientName: patient.name,
 
       dateOfBirth: patient.dateOfBirth,
 
       evaluationDate: patient.evaluationDate,
+      // evaluationDate: "2026-10-02",
 
       gender: patient.gender,
+
+      ifiFunctionalProfileVersion: ifiFunctionalProfile.version,
 
       results: {
         IFI: results.IFI,

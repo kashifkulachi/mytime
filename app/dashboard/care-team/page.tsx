@@ -839,7 +839,7 @@ function DoctorIdentity({
       <div className="min-w-0">
         <div className="flex flex-wrap items-center gap-2">
           <h3 className="truncate text-sm font-bold text-[#092846]">
-            {displayName}
+            Dr. {displayName}
           </h3>
 
           <span
