@@ -650,8 +650,8 @@ export default function PatientInfo() {
 
             dateOfBirth: patientData.dateOfBirth,
 
-            // evaluationDate: biologicalAgeResult.evaluationDate,
-            evaluationDate: "2026-10-02",
+            evaluationDate: biologicalAgeResult.evaluationDate,
+            // evaluationDate: "2026-10-02",
 
             gender: patientData.sex,
           },
