@@ -203,6 +203,15 @@ body {
   }
 }
 
+.recharts-wrapper:focus,
+.recharts-surface:focus,
+.recharts-layer:focus,
+.recharts-wrapper *:focus,
+.recharts-surface *:focus,
+.recharts-layer *:focus {
+  outline: none !important;
+}
+
 .animate-wave {
   animation: wave 0.9s ease-in-out infinite;
   transform-origin: bottom;

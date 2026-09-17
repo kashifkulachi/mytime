@@ -316,7 +316,7 @@ export default function IFIMonitoringPatientHeader({
             </p>
 
             <p className="mt-1 text-[14px] font-semibold text-[#12355b]">
-              Day {latestMonitoringDay}{" "}
+              Day {latestMonitoringDay + 1}{" "}
               <span className="text-[11px] font-medium text-slate-400">
                 of 31
               </span>

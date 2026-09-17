@@ -204,7 +204,7 @@ export default function IFIMonitoringChart({ days }: IFIMonitoringChartProps) {
 
       {/* Graph */}
       <div className="px-2 pb-3 pt-6 sm:px-5">
-        <div className="h-[360px] w-full sm:h-[420px]">
+        <div className="h-[360px] w-full sm:h-[420px] ">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart
               data={chartData}
