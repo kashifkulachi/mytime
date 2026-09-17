@@ -396,15 +396,6 @@ export default function Sidebar({ role }: SidebarProps) {
 
         <div className="mt-auto px-6">
           <div className="space-y-2 border-t border-outline-variant/30 pt-6">
-            <Link
-              href="/support"
-              className="flex items-center gap-3 py-3 text-on-surface-variant transition-colors duration-300 hover:text-on-surface"
-            >
-              <HelpCircle className="h-5 w-5" />
-
-              <span>Support</span>
-            </Link>
-
             <LogoutButton />
           </div>
         </div>

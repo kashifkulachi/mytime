@@ -69,10 +69,11 @@
 
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, LogOut } from "lucide-react";
+import { HelpCircle, Loader2, LogOut, User } from "lucide-react";
 import { toast } from "sonner";
 
 import { logoutAction } from "@/app/(auth)/logout/actions";
+import Link from "next/link";
 
 type LogoutButtonProps = {
   variant?: "sidebar" | "header";
@@ -138,20 +139,33 @@ export default function LogoutButton({
   }
 
   return (
-    <button
-      type="button"
-      onClick={handleLogout}
-      disabled={isPending}
-      aria-busy={isPending}
-      className="flex w-full cursor-pointer items-center gap-3 py-3 text-left text-on-surface-variant transition-colors duration-300 hover:text-red-500 disabled:cursor-not-allowed disabled:opacity-60"
-    >
-      {isPending ? (
-        <Loader2 className="h-5 w-5 shrink-0 animate-spin" aria-hidden="true" />
-      ) : (
-        <LogOut className="h-5 w-5 shrink-0" aria-hidden="true" />
-      )}
+    <div>
+      <Link
+        href="/dashboard/profile"
+        className="flex items-center gap-3 py-3 text-on-surface-variant transition-colors duration-300 hover:text-on-surface"
+      >
+        <User className="h-5 w-5" />
 
-      <span>{isPending ? "Signing Out..." : "Sign Out"}</span>
-    </button>
+        <span>My Profile</span>
+      </Link>
+      <button
+        type="button"
+        onClick={handleLogout}
+        disabled={isPending}
+        aria-busy={isPending}
+        className="flex w-full cursor-pointer items-center gap-3 py-3 text-left text-on-surface-variant transition-colors duration-300 hover:text-red-500 disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        {isPending ? (
+          <Loader2
+            className="h-5 w-5 shrink-0 animate-spin"
+            aria-hidden="true"
+          />
+        ) : (
+          <LogOut className="h-5 w-5 shrink-0" aria-hidden="true" />
+        )}
+
+        <span>{isPending ? "Signing Out..." : "Sign Out"}</span>
+      </button>
+    </div>
   );
 }

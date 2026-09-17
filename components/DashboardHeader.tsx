@@ -1,4 +1,4 @@
-import { UserRound } from "lucide-react";
+import { User, UserRound } from "lucide-react";
 
 import LogoutButton from "@/components/auth/LogoutButton";
 import Link from "next/link";
@@ -27,6 +27,14 @@ export default function DashboardHeader({
   return (
     <header className="flex h-16 w-full items-center justify-end border-b border-slate-200 bg-white px-6">
       <div className="flex items-center gap-4 ">
+        <Link
+          href="/dashboard/profile"
+          className="flex h-9 cursor-pointer items-center gap-2 rounded-lg px-3 text-sm font-medium text-slate-600 transition-colors duration-200 hover:bg-green-50 hover:text-green-600 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          <User className="h-5 w-5" />
+
+          <span>My Profile</span>
+        </Link>
         {/* USER */}
         <Link href="/dashboard/profile">
           <div className="flex items-center gap-3 hover:bg-gray-50 rounded-[1px] p-2">
