@@ -57,11 +57,26 @@ function formatDate(value: string | null | undefined): string {
     return value;
   }
 
+  /**
+   * IMPORTANT:
+   *
+   * This is a calendar date, not a timestamp.
+   *
+   * Do NOT use:
+   *   new Date("2026-09-17")
+   *   Date.UTC(...)
+   *   toISOString()
+   *
+   * Creating the Date from numeric components preserves the
+   * calendar date in the viewer's local timezone.
+   */
+  const localCalendarDate = new Date(year, month - 1, day);
+
   return new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "2-digit",
     year: "numeric",
-  }).format(new Date(Date.UTC(year, month - 1, day)));
+  }).format(localCalendarDate);
 }
 
 function formatDateTime(value: string | null | undefined): string {
@@ -316,7 +331,7 @@ export default function IFIMonitoringPatientHeader({
             </p>
 
             <p className="mt-1 text-[14px] font-semibold text-[#12355b]">
-              Day {latestMonitoringDay + 1}{" "}
+              Day {latestMonitoringDay}{" "}
               <span className="text-[11px] font-medium text-slate-400">
                 of 31
               </span>

@@ -11,11 +11,22 @@ function formatDate(value: string): string {
     return value;
   }
 
+  /**
+   * Monitoring dates are calendar dates, not timestamps.
+   *
+   * Constructing the Date from local numeric components prevents
+   * YYYY-MM-DD values from being shifted by the viewer's timezone.
+   *
+   * Example:
+   * 2026-09-17 must display as Sep 17, 2026 everywhere.
+   */
+  const calendarDate = new Date(year, month - 1, day);
+
   return new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "2-digit",
     year: "numeric",
-  }).format(new Date(Date.UTC(year, month - 1, day)));
+  }).format(calendarDate);
 }
 
 function formatIfi(value: number | null): string {

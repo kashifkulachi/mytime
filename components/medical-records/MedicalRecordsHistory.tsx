@@ -1248,18 +1248,43 @@ function formatAge(value: number | null | undefined): string {
   return value.toFixed(1).replace(/\.0$/, "");
 }
 
-function formatDate(value: string): string {
-  const date = new Date(`${value}T00:00:00`);
+// function formatDate(value: string): string {
+//   const date = new Date(`${value}T00:00:00`);
 
-  if (Number.isNaN(date.getTime())) {
+//   if (Number.isNaN(date.getTime())) {
+//     return value;
+//   }
+
+//   return new Intl.DateTimeFormat("en-US", {
+//     month: "short",
+//     day: "numeric",
+//     year: "numeric",
+//   }).format(date);
+// }
+
+function formatDate(value: string): string {
+  const [year, month, day] = value.split("-").map(Number);
+
+  if (!year || !month || !day) {
     return value;
   }
 
+  /**
+   * Monitoring dates are calendar dates, not timestamps.
+   *
+   * Constructing the Date from local numeric components prevents
+   * YYYY-MM-DD values from being shifted by the viewer's timezone.
+   *
+   * Example:
+   * 2026-09-17 must display as Sep 17, 2026 everywhere.
+   */
+  const calendarDate = new Date(year, month - 1, day);
+
   return new Intl.DateTimeFormat("en-US", {
     month: "short",
-    day: "numeric",
+    day: "2-digit",
     year: "numeric",
-  }).format(date);
+  }).format(calendarDate);
 }
 
 function formatCreatedTime(value: string): string {
