@@ -26,9 +26,17 @@ export function prepareFormulaInput(assessment: Assessment): IFIFormulaInput {
     );
   }
 
+  function getLocalDateString(date = new Date()): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  }
+
   return {
-    evaluationDate: new Date().toISOString().slice(0, 10),
-    // evaluationDate: "2026-07-10", // TODO: Replace with actual evaluation date
+    // evaluationDate: new Date().toISOString().slice(0, 10),
+    evaluationDate: getLocalDateString(),
     /*
      * Patient information
      */
